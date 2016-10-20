@@ -1,98 +1,187 @@
-import a_star
+import general_search
 import re
-
-answerKey = {'1': (1, 1), '2': (1, 2), '3': (1, 3), '4': (2, 1), '5': (2, 2), '6': (2, 3), '7': (3, 1), '8': (3, 2), '0': (3, 3)}
-
-
+answer = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 customPuzzle = []
 
+
+def swap(self, x, y):
+    self[x], self[y] = self[y], self[x]
+
+
+def misplaced(state):
+    num = 0
+    for i in range(0, 8, 1):
+        if state[i] != answer[i]:
+            num += 1
+    return num
+
+
+def manhattan(state):
+    dist = 0
+    for i in range(0, 8, 1):
+        val = state.index(i)
+        ans = answer.index(i)
+        if val == ans:
+            continue
+        elif val in [0, 1, 2]:
+            if ans in [0, 1, 2]:
+                dist += abs(val - ans)
+            elif ans in [3, 4, 5]:
+                val += 3
+                dist += abs(val - ans) + 3
+            else:
+                val += 6
+                dist += abs(val - ans) + 6
+        elif val in [3, 4, 5]:
+            if ans in [3, 4, 5]:
+                dist += abs(val - ans)
+            elif ans in [0, 1, 2]:
+                val -= 3
+                dist += abs(val - ans) + 3
+            else:
+                val += 6
+                dist += abs(val - ans) + 6
+        elif val in [6, 7, 8]:
+            if ans in [6, 7, 8]:
+                dist += abs(val - ans)
+            elif ans in [3, 4, 5]:
+                val -= 3
+                dist += abs(val - ans) + 3
+            else:
+                val -= 6
+                dist += abs(val - ans) + 6
+    return dist
+
+
 class node:
-    def __init__(self, row, col, num):
-        self.r = row
-        self.c = col
-        self.val = num
+    def __init__(self, state, parent=None):
+        self.STATE = state
+        self.MISPLACED = misplaced(state)
+        self.MANHATTAN = manhattan(state)
+        if parent is None:
+            self.PARENT = None
+            self.DEPTH = 0
+        else:
+            self.STATE = state
+            self.PARENT = parent #list
+            self.DEPTH = self.PARENT.DEPTH+1
 
-    def __repr__(self):
-        return str(self.val)
+    def __getitem__(self, item):
+        return self.STATE[item]
 
-    def misplaced(self):
-        if
-        if answerKey[str(self.val)]==(self.r, self.c):
-            return 0
-        else: return 1
+    def __index__(self, item):
+        return self.STATE.index(item)
 
-    def manhattan(self):
-        goal = answerKey[str(self.val)]
-        return abs(self.r-goal[0]) + abs(self.c-goal[1])
+    def swap(self, x, y):
+        self.STATE[x], self.STATE[y] = self.STATE[y], self.STATE[x]
 
-def doSearch(x):
-    if x == 1: return a_star.ucs(customPuzzle)
-    elif x==2: return a_star.asmth(customPuzzle)
-    elif x==3: return a_star.asmdh(customPuzzle)
+
+def move_left(state, pos):
+    if pos in [0, 3, 6]:
+        return 0
     else:
-        print "incorrect input"
-        return getAlg()
+        child = node(list(state), state)
+        child.swap(pos, pos-1)
+        return child
+
+
+def move_right(state, pos):
+    if pos in [2, 5, 8]:
+        return 0
+    else:
+        child = node(list(state), state)
+        child.swap(pos, pos+1)
+        return child
+
+
+def move_up(state, pos):
+    if pos in [0, 1, 2]:
+        return 0
+    else:
+        child = node(list(state), state)
+        child.swap(pos, pos-3)
+        return child
+
+
+def move_down(state, pos):
+    if pos in [6, 7, 8]:
+        return 0
+    else:
+        child = node(list(state), state)
+        child.swap(pos, pos+3)
+        return child
+
+
+def test_goal(state):
+    if state == answer:
+        return 1
+    else:
+        return 0
+
+
+class Puzzle:
+    def __init__(self, initialState):
+        self.INITIAL_STATE = node(initialState)
+        self.OPERATORS = [move_left, move_right, move_up, move_down]
+        self.GOAL_TEST = test_goal
+
 
 def makePuzzle():
     print "    Enter your puzzle, use a zero to represent the blank"
     get = raw_input('    Enter the first row, use space or tabs between numbers ')
     temp = map(int, re.split(', | ', get))
-    temp2 = []
-    i = 1
-    j = 1
     for num in temp:
-            x = node(i, j, num)
-            temp2.append(x)
-            i += 1
-    i = 1
-    j = 2
-    customPuzzle.append(temp2)
-    get = raw_input('    Enter the first row, use space or tabs between numbers ')
+            customPuzzle.append(num)
+
+    get = raw_input('    Enter the second row, use space or tabs between numbers ')
     temp = map(int, re.split(', | ', get))
-    temp2 = []
     for num in temp:
-            x = node(i, j, num)
-            temp2.append(x)
-            i += 1
-    i = 1
-    j = 3
-    customPuzzle.append(temp2)
+            customPuzzle.append(num)
     get = raw_input('    Enter the third row, use space or tabs between numbers ')
     temp = map(int, re.split(', | ', get))
-    temp2 = []
     for num in temp:
-            x = node(i, j, num)
-            temp2.append(x)
-            i += 1
-    customPuzzle.append(temp2)
-    return customPuzzle
+            customPuzzle.append(num)
+    return Puzzle(customPuzzle)
+
 
 def getPuzzle():
     print "Type \"1\" to use a default puzzle, or \"2\" to enter your own puzzle."
     y = input()
-    if y == 1: return defaultPuzzle
-    elif y == 2: return makePuzzle()
+    if y == 1:
+        return default
+    elif y == 2:
+        return makePuzzle()
     else:
         print "incorrect input"
         return getPuzzle()
 
 
-def getAlg():
+def getAlg(thePuzzle):
     print "     Enter your choice of algorithm"
     print "         1. Uniform Cost Search"
     print "         2. A* with the Misplaced Tile heuristic."
     print "         3. A* with the Manhattan distance heuristic.\n"
-    return doSearch(input('         '))
+    option = input('         ')
+    if not(option > 3) and not(option < 1):
+        return general_search.search(thePuzzle, option)
+    else:
+        print "incorrect input"
+        return getAlg()
 
-defaultPuzzle = [[node(1,1,1),node(1,2,2),node(1, 3,3)],
-                 [node(2,1,4),node(2,2,8),node(2,3,0)],
-                 [node(3,1,7),node(3,2,6),node(3,3,5)]]
+default = Puzzle([1, 2, 3,
+                  4, 8, 0,
+                  7, 6, 5])
 
 def main():
     print "Welcome to Tyson Loveless' 8-puzzle solver."
     thePuzzle = getPuzzle()
-    for row in thePuzzle:
-        print row
-    print getAlg()
+    result, total, max = getAlg(thePuzzle)
+    if result is 0:
+        print "Failure!  No solution to this problem"
+    else:
+        print "\n\nGoal!!"
+        print "\nTo solve this problem the search algorithm expanded a total number of %d nodes." % total
+        print "The maximum number of nodes in the queue at any one time was %i" % max
+        print "The depth of the goal node was %d" %result.DEPTH
 
 main()
