@@ -76,7 +76,8 @@ print "Here is the chosen puzzle: "
 general_search.printPuzzle(thePuzzle.INITIAL_STATE)
 result, total, maxSize = getAlg(thePuzzle)
 if result is 0:
-    print "Failure!  No solution to this problem"
+    print "You have discovered a bug - please report this to tlove004@ucr.edu!"
+    print "Please include the exact puzzle used to recreate the bug and the search method used"
 else:
     print "\n\nGoal!!"
     print "\nTo solve this problem the search algorithm expanded a total number of %d nodes." % total
