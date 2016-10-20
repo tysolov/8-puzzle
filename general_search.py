@@ -64,7 +64,7 @@ def search(problem, function):
                 if function is 1:
                     heappush(nodes, [child.DEPTH, child])
                 elif function is 2:
-                    heappush(nodes, [child.MISPLACED + child.DEPTH, child])
+                    heappush(nodes, [child.MISPLACED, child])
                 else:
                     heappush(nodes, [child.MANHATTAN + child.DEPTH, child])
                 TOTAL_EXPANDED += 1

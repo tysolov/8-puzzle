@@ -4,13 +4,17 @@ import general_search
 import re
 import puzzle
 
-# to check our current state against
+# default puzzle
 default = puzzle.Puzzle([1, 2, 3,
                          4, 8, 0,
                          7, 6, 5])
 
+#answer is automatically generated
+answer = []
+for i in range(1, puzzle.size, 1):
+    answer.append(i)
+answer.append(0)
 customPuzzle = []
-
 
 
 # the following are helper functions for a text-based UI
@@ -53,6 +57,9 @@ def getAlg(thePuzzle):
     print "         2. A* with the Misplaced Tile heuristic."
     print "         3. A* with the Manhattan distance heuristic.\n"
     option = input('         ')
+    if not  puzzle.checkSolvable(thePuzzle.INITIAL_STATE.STATE):
+        print "This puzzle is not solvable!"
+        exit(0)
     if not(option > 3) and not(option < 1):
         return general_search.search(thePuzzle, option)
     else:
@@ -65,6 +72,7 @@ def getAlg(thePuzzle):
 print "Welcome to Tyson Loveless' 8-puzzle solver."
 thePuzzle = getPuzzle()
 print "Here is the chosen puzzle: "
+
 general_search.printPuzzle(thePuzzle.INITIAL_STATE)
 result, total, maxSize = getAlg(thePuzzle)
 if result is 0:

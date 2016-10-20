@@ -1,14 +1,43 @@
 #puzzle.py defines nodes, rules, and functions for the eight-puzzle game
 # functions are defined in a way to easily expand to a 15, 25, or larger puzzle
 # all functions are written and conceptualized by Tyson Loveless
-
 from math import sqrt
 # helper function for updating state
-answer = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-size = answer.__len__()
+
+#update this to change puzzle type
+size = 9
 edge = int(sqrt(size))
+
+#answer is generated based on size of puzzle
+answer = []
+for i in range(1, size, 1):
+    answer.append(i)
+answer.append(0)
 def swap(self, x, y):
     self[x], self[y] = self[y], self[x]
+
+
+# this function checks for solvability using the rules found at
+# https://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
+def checkSolvable(puzzle):
+    inversions = 0
+    check = list(puzzle)
+    check.remove(0)
+    for i in range(0, check.__len__(), 1):
+        for j in range(i, check.__len__(), 1):
+            if check[i] > check[j]:
+                inversions += 1
+    if edge % 2 == 1: #odd edge size
+        return not(inversions % 2) #solvable if even
+    else:   # even edge size
+        zeroPosition = puzzle.index(0)
+        # check if in even row
+        for i in range(0, edge*edge, edge*2):
+            for j in range(0, edge, 1):
+                if zeroPosition == i+j:
+                    return inversions % 2 # solvable if odd
+        else: # in odd row
+            return not(inversions % 2) #solvable if even
 
 
 # calculates total misplaced tiles
