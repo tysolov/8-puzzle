@@ -44,6 +44,8 @@ def checkSolvable(puzzle):
 def misplaced(state):
     num = 0
     for i in range(0, size, 1):
+        if state[i] is 0:
+            continue
         if state[i] != answer[i]:
             #simply increments whenever the tiles are out of place
             num += 1
@@ -53,7 +55,7 @@ def misplaced(state):
 # calculates total manhattan distance
 def manhattan(state):
     dist = 0
-    for i in range(0, size, 1):
+    for i in range(1, size, 1):
         val = state.index(i)
         ans = answer.index(i)
         if val == ans:  #manhattan distance for tile = 0
@@ -96,8 +98,8 @@ class node:
     # nodes are initialized with state, heuristic values, and current depth
     def __init__(self, state, parent=None):
         self.STATE = state
-        self.MISPLACED = misplaced(state)
-        self.MANHATTAN = manhattan(state)
+        self.MISPLACED = None
+        self.MANHATTAN = None
         # a parent will be at depth 0
         if parent is None:
             self.PARENT = None
@@ -110,6 +112,16 @@ class node:
 
     def __getitem__(self, item):
         return self.STATE[item]
+
+    def mis(self):
+        if self.MISPLACED is None:
+            self.MISPLACED = misplaced(self.STATE)
+        return self.MISPLACED
+
+    def man(self):
+        if self.MANHATTAN is None:
+            self.MANHATTAN = manhattan(self.STATE)
+        return self.MANHATTAN
 
     def __index__(self, item):
         return self.STATE.index(item)

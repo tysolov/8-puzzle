@@ -5,9 +5,12 @@ import re
 import puzzle
 
 # default puzzle
-default = puzzle.Puzzle([1, 2, 3,
-                         4, 8, 0,
-                         7, 6, 5])
+default = puzzle.Puzzle([1, 2, 3, 4, 0, 6, 7, 5, 8])
+                         #4, 1, 2, 7, 5, 3, 8, 6, 0])
+                         #4, 2, 8, 6, 0, 3, 7, 5, 1])
+                         #0, 8, 7, 6, 5, 4, 3, 2, 1])
+                         #8, 6, 7, 2, 5, 4, 3, 0, 1])
+
 
 #answer is automatically generated
 answer = []
@@ -84,3 +87,19 @@ else:
     print "The maximum number of nodes in the queue at any one time was %i" % maxSize
     print "The depth of the goal node was %d" % result.DEPTH
 
+x = raw_input(' Print Trace? ')
+if x:
+    if x[0]=='y' or 'Y':
+        trace = []
+        trace.append(result.STATE)
+        node = result.PARENT
+        while node.PARENT is not None:
+            trace.append(node.STATE)
+            node = node.PARENT
+        trace.append(node.STATE)
+        trace.reverse()
+        for state in trace:
+            general_search.printPuzzle(state)
+            print ''
+
+print '   Done'
