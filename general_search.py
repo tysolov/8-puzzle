@@ -74,10 +74,14 @@ def search(problem, function):
                 if child.DEPTH <= diameter:
                     if function is 1:
                         heappush(nodes, [child.DEPTH, child])
+                        #heappush(nodes, [child.DEPTH + child.mis() + child.man(), child])
+                        # heappush(nodes, [child.mis() + child.man(), child])
                     elif function is 2:
                         heappush(nodes, [child.DEPTH + child.mis(), child])
+                        # heappush(nodes, [child.mis(), child])
                     else:
-                        heappush(nodes, [child.man(), child])
+                        heappush(nodes, [child.DEPTH + child.man(), child])
+                        #heappush(nodes, [child.man(), child])
                     TOTAL_EXPANDED += 1
             # success is checked once a node is expanded, to avoid expanding extra nodes
                 # if our goal has been traversed to

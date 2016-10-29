@@ -5,9 +5,9 @@ import re
 import puzzle
 
 # default puzzle
-default = puzzle.Puzzle([1, 2, 3, 4, 0, 6, 7, 5, 8])
+default = puzzle.Puzzle([#1, 2, 3, 4, 0, 6, 7, 5, 8])
                          #4, 1, 2, 7, 5, 3, 8, 6, 0])
-                         #4, 2, 8, 6, 0, 3, 7, 5, 1])
+                         4, 2, 8, 6, 0, 3, 7, 5, 1])
                          #0, 8, 7, 6, 5, 4, 3, 2, 1])
                          #8, 6, 7, 2, 5, 4, 3, 0, 1])
 
@@ -89,7 +89,7 @@ else:
 
 x = raw_input(' Print Trace? ')
 if x:
-    if x[0]=='y' or 'Y':
+    if x[0]=='y' or x[0]=='Y':
         trace = []
         trace.append(result.STATE)
         node = result.PARENT
