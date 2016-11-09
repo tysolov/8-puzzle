@@ -21,7 +21,10 @@ def printPuzzle(state):
     for i in range(0, puzzle.edge):
         print '      ',
         while j < puzzle.edge:
-            print state[j + puzzle.edge * i],
+            if state[j + puzzle.edge * i] == 0:
+                print '*',
+            else:
+                print state[j + puzzle.edge * i],
             j += 1
         print ""
         j = 0

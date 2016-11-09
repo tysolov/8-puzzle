@@ -10,9 +10,15 @@ edge = int(sqrt(size))
 
 #answer is generated based on size of puzzle
 answer = []
-for i in range(1, size, 1):
-    answer.append(i)
-answer.append(0)
+def makeAnswer(x = 0):
+    global answer
+    if x:
+        answer = list(x)
+        return answer
+    for i in range(1, size, 1):
+        answer.append(i)
+    answer.append(0)
+    return answer
 def swap(self, x, y):
     self[x], self[y] = self[y], self[x]
 
@@ -180,6 +186,9 @@ def test_goal(state):
 # the structure of the puzzle: the root node, legal operators, and goal are all defined to define our problem scope
 class Puzzle:
     def __init__(self, initialState):
-        self.INITIAL_STATE = node(initialState)
+        self.INITIAL_STATE = node(list(initialState))
         self.OPERATORS = [move_left, move_right, move_up, move_down]
         self.GOAL_TEST = test_goal
+
+    def diffGoal(self, goalState):
+        self.ANSWER = list(goalState)
