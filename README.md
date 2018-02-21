@@ -1,6 +1,4 @@
-# CS205 Project 1
-
-## 8-Puzzle Solver
+# 8-Puzzle Solver
 
 By Tyson Loveless
 
