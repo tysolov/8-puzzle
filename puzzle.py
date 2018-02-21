@@ -1,17 +1,26 @@
-#puzzle.py defines nodes, rules, and functions for the eight-puzzle game
-# functions are defined in a way to easily expand to a 15, 25, or larger puzzle
-# all functions are written and conceptualized by Tyson Loveless
+# puzzle.py defines nodes, rules, and functions for the eight-puzzle game
+# functions are defined in a way to easily expand to a 15, 24, or larger puzzle
 from math import sqrt
-# helper function for updating state
+from math import ceil
 
-#update this to change puzzle type
+# default setup for 8-puzzle
 size = 9
 edge = int(sqrt(size))
 
-#answer is generated based on size of puzzle
+# sets up puzzle board, given the desired size
+def setup(num):
+    global size
+    global edge
+    size = num  # the size of the grid (8 puzzle = 9, 15 puzzle = 16, etc)
+    edge = int(sqrt(num))
+    return size, edge
+
+# answer is generated based on size of puzzle
 answer = []
 def makeAnswer(x = 0):
     global answer
+    global size
+    answer = []
     if x:
         answer = list(x)
         return answer
@@ -19,8 +28,6 @@ def makeAnswer(x = 0):
         answer.append(i)
     answer.append(0)
     return answer
-def swap(self, x, y):
-    self[x], self[y] = self[y], self[x]
 
 
 # this function checks for solvability using the rules found at
@@ -29,12 +36,13 @@ def checkSolvable(puzzle):
     inversions = 0
     check = list(puzzle)
     check.remove(0)
+    # get total number of inversions
     for i in range(0, check.__len__(), 1):
         for j in range(i, check.__len__(), 1):
             if check[i] > check[j]:
                 inversions += 1
-    if edge % 2 == 1: #odd edge size
-        return not(inversions % 2) #solvable if even
+    if edge % 2 == 1: #o dd edge size
+        return not(inversions % 2) # solvable if even
     else:   # even edge size
         zeroPosition = puzzle.index(0)
         # check if in even row
@@ -43,7 +51,7 @@ def checkSolvable(puzzle):
                 if zeroPosition == i+j:
                     return inversions % 2 # solvable if odd
         else: # in odd row
-            return not(inversions % 2) #solvable if even
+            return not(inversions % 2) # solvable if even
 
 
 # calculates total misplaced tiles
@@ -53,7 +61,7 @@ def misplaced(state):
         if state[i] is 0:
             continue
         if state[i] != answer[i]:
-            #simply increments whenever the tiles are out of place
+            # simply increments whenever the tiles are out of place
             num += 1
     return num
 
@@ -64,37 +72,24 @@ def manhattan(state):
     for i in range(1, size, 1):
         val = state.index(i)
         ans = answer.index(i)
-        if val == ans:  #manhattan distance for tile = 0
+        if val == ans:  # manhattan distance for tile = 0
             continue
-        #for each else branch below, first the vertical displacement is checked
-        # then the horizontal displacement is found
-        elif val in range(0, edge, 1):
-            if ans in range(0, edge, 1):
-                dist += abs(val - ans)
-            elif ans in range(edge, edge*2, 1):
-                val += edge
-                dist += abs(val - ans) + 1
-            else:
-                val += edge*2
-                dist += abs(val - ans) + 2
-        elif val in range(edge, edge*2, 1):
-            if ans in range(edge, edge*2, 1):
-                dist += abs(val - ans)
-            elif ans in range(0, edge, 1):
-                val -= edge
-                dist += abs(val - ans) + 1
-            else:
-                val += edge
-                dist += abs(val - ans) + 1
-        elif val in range(edge*2, edge*3, 1):
-            if ans in range(edge*2, edge*3, 1):
-                dist += abs(val - ans)
-            elif ans in range(edge, edge*2, 1):
-                val -= edge
-                dist += abs(val - ans) + 1
-            else:
-                val -= edge*2
-                dist += abs(val - ans) + 2
+
+        # get row position of current state and answer
+        valRow = int(ceil(val/float(edge)))
+        ansRow = int(ceil(ans/float(edge)))
+        # if val or ans is at index 0, then row == 1
+        if valRow == 0:
+            valRow = 1
+        if ansRow == 0:
+            ansRow = 1
+
+        # get column position of current state and answer
+        valCol = (val % edge) + 1
+        ansCol = (ans % edge) + 1
+
+        # add manhattan distance for this tile to total
+        dist += (abs(valRow-ansRow) + (abs(valCol - ansCol)))
     return dist
 
 
