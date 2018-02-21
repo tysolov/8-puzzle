@@ -16,7 +16,7 @@ Clone the repo and launch `python eight_puzzle.py` and follow the user interface
 ## Consulted works:
 
 - Lecture slides from http://www.cs.ucr.edu/~eamonn/205/
-- Solvability rules from https://www.cs.bham.ac.uk/~mdr/teaching/modules04/ java2/TilesSolvability.html
+- Solvability rules from https://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
 - Various online resources for generating test puzzles.
 
 ## Known Issues:
